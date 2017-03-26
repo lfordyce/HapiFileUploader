@@ -3,6 +3,14 @@ import * as Loki from "lokijs";
 import * as fs from "fs";
 import * as uuid from "uuid";
 
+const imageFilter = function (fileName: string) {
+  // accept image formats only
+  if (!fileName.match(/\.(jpg|jpeg|png|gif)$/)) {
+    return false;
+  }
+  return true;
+};
+
 const loadCollection = function (colName, db: Loki ): Promise<LokiCollection<any>> {
   return new Promise(resolve => {
     db.loadDatabase({}, () => {
@@ -20,6 +28,11 @@ const uploader = function (file: any, options: FileUploaderOption) {
 
 const _fileHandler = function (file: any, options: FileUploaderOption) {
   if (!file) throw new Error("no file(s)");
+
+  // apply filter if exist
+  if (options.fileFilter && !options.fileFilter(file.hapi.filename)) {
+    throw new Error("type not allowed");
+  }
 
   const originalName = file.hapi.filename;
   const filename = uuid.v1();
@@ -49,4 +62,4 @@ const _fileHandler = function (file: any, options: FileUploaderOption) {
   });
 };
 
-export { loadCollection, uploader }
+export { imageFilter, loadCollection, uploader }

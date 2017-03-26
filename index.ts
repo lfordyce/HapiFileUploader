@@ -5,14 +5,14 @@ import * as fs from "fs";
 import * as Loki from "lokijs";
 
 import {
-  loadCollection, uploader
+  imageFilter, loadCollection, uploader
 } from "./utils";
 
 // setup
 const DB_NAME = "db.json";
 const COLLECTION_NAME = "image";
 const UPLOAD_PATH = "uploads";
-const fileOptions: FileUploaderOption = { dest: `${UPLOAD_PATH}/` };
+const fileOptions: FileUploaderOption = { dest: `${UPLOAD_PATH}/`, fileFilter: imageFilter };
 const db = new Loki(`${UPLOAD_PATH}/${DB_NAME}`, {persistenceMethod: "fs"});
 
 // create folder for upload if not exists
