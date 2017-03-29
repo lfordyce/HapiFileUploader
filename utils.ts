@@ -3,6 +3,11 @@ import * as Loki from "lokijs";
 import * as fs from "fs";
 import * as uuid from "uuid";
 
+const cleanFolder = function (folderPath) {
+  // delete files inside folder but not the folder itself
+  del.sync([`${folderPath}/**`, `!${folderPath}`]);
+};
+
 const imageFilter = function (fileName: string) {
   // accept image formats only
   if (!fileName.match(/\.(jpg|jpeg|png|gif)$/)) {
@@ -23,7 +28,14 @@ const loadCollection = function (colName, db: Loki ): Promise<LokiCollection<any
 const uploader = function (file: any, options: FileUploaderOption) {
   if (!file) throw new Error ("no file(s)");
 
-  return _fileHandler(file, options);
+  return Array.isArray(file) ? _filesHandler(file, options) : _fileHandler(file, options);
+};
+
+const _filesHandler = function (files: any[], options: FileUploaderOption) {
+  if (!files || !Array.isArray(files)) throw new Error("no files");
+
+  const promises = files.map(x => _fileHandler(x, options));
+  return Promise.all(promises);
 };
 
 const _fileHandler = function (file: any, options: FileUploaderOption) {
@@ -62,4 +74,4 @@ const _fileHandler = function (file: any, options: FileUploaderOption) {
   });
 };
 
-export { imageFilter, loadCollection, uploader }
+export { imageFilter, loadCollection, cleanFolder, uploader }
