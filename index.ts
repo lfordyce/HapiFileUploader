@@ -41,6 +41,7 @@ app.route({
   path: "/profile",
   config: {
     payload: {
+      maxBytes: 209715200,
       output: "stream",
       allow: "multipart/form-data" // important
     }
@@ -72,6 +73,7 @@ app.route({
   path: "/photos/upload",
   config: {
     payload: {
+      maxBytes: 209715200,
       output: "stream",
       allow: "multipart/form-data" // important
     }
