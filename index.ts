@@ -81,7 +81,7 @@ app.route({
   handler: async function (request, reply) {
       try {
         const data = request.payload;
-        const files = data["photos"]; // accept a file call avatar
+        const files = data["photos"]; // accept a file call photos
 
         // save the file
         const fileDetails = await uploader(files, fileOptions);
